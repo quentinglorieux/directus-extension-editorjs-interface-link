@@ -12,7 +12,6 @@ import EmbedTool from '@editorjs/embed';
 import MarkerTool from '@editorjs/marker';
 import RawToolTool from '@editorjs/raw';
 import InlineCodeTool from '@editorjs/inline-code';
-import Tooltip from 'editorjs-tooltip';
 import AlertTool from 'editorjs-alert';
 import StrikethroughTool from '@itech-indrustries/editorjs-strikethrough';
 import AlignmentTuneTool from 'editorjs-text-alignment-blocktune';
@@ -32,6 +31,8 @@ export type UploaderConfig = {
 	t: Record<string, string>;
 };
 
+
+
 export default function getTools(
 	uploaderConfig: UploaderConfig,
 	selection: Array<string>,
@@ -46,6 +47,9 @@ export default function getTools(
 			class: HeaderTool,
 			shortcut: 'CMD+SHIFT+H',
 			inlineToolbar: true,
+		},
+		marqed: {
+			class: MarqedTool,
 		},
 		list: {
 			class: ListTool,
@@ -75,7 +79,7 @@ export default function getTools(
 		},
 		underline: {
 			class: UnderlineTool,
-			shortcut: 'CMD+SHIFT+U',
+			shortcut: 'CMD+SHIFT+X',
 		},
 		strikethrough: {
 			class: StrikethroughTool,
@@ -129,26 +133,13 @@ export default function getTools(
 			class: PersonalityTool,
 			config: {
 				uploader: uploaderConfig,
-			},
-		marqed: {
-			class: MarqedTool,
-		},
-		tooltip: {
-			class: Tooltip,
-			config: {
-			  location: 'left',
-			  highlightColor: '#FFEFD5',
-			  underline: true,
-			  backgroundColor: '#154360',
-			  textColor: '#FDFEFE',
-			  holder: 'editorId',
-			}
-		  },	
+			},	
 		},
 		alignmentTune: {
 			class: AlignmentTuneTool,
 		},
 	};
+
 
 	for (const toolName of selection) {
 		if (!haveFilesAccess && fileRequiresTools.includes(toolName)) continue;
@@ -157,6 +148,10 @@ export default function getTools(
 			tools[toolName] = defaults[toolName];
 		}
 	}
+
+	console.log(tools)
+
+	
 
 	if ('alignmentTune' in tools) {
 		if ('paragraph' in tools) {

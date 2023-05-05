@@ -54,7 +54,7 @@ export default defineInterface({
 			name: '$t:interfaces.input-rich-text-html.toolbar',
 			type: 'json',
 			schema: {
-				default_value: ['header', 'tooltip', 'nestedlist', 'code', 'image', 'paragraph', 'delimiter', 'checklist', 'quote', 'underline'],
+				default_value: ['header', 'marqed', 'nestedlist', 'code', 'image', 'paragraph', 'delimiter', 'checklist', 'quote', 'underline'],
 			},
 			meta: {
 				width: 'half',
@@ -64,10 +64,6 @@ export default defineInterface({
 						{
 							value: 'header',
 							text: 'Header',
-						},
-						{
-							value: 'tooltip',
-							text: 'Tooltip',
 						},
 						{
 							value: 'marqed',

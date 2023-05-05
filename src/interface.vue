@@ -57,7 +57,7 @@ const props = withDefaults(
 		autofocus: false,
 		value: () => null,
 		bordered: true,
-		tools: () => ['header', 'tooltip', 'marqed', 'nestedlist', 'code', 'image', 'paragraph', 'delimiter', 'checklist', 'quote', 'underline'],
+		tools: () => ['header',  'marqed', 'nestedlist', 'code', 'image', 'paragraph', 'delimiter', 'checklist', 'quote', 'underline'],
 		font: 'sans-serif',
 	}
 );
@@ -78,8 +78,14 @@ const editorElement = ref<HTMLElement>();
 const haveFilesAccess = Boolean(collectionStore.getCollection('directus_files'));
 const isInternalChange = ref<boolean>(false);
 
+{
+				
+			  }
+
+
 const tools = getTools(
 	{
+		
 		addTokenToURL,
 		baseURL: api.defaults.baseURL,
 		setFileHandler,
