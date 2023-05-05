@@ -12,6 +12,7 @@ import EmbedTool from '@editorjs/embed';
 import MarkerTool from '@editorjs/marker';
 import RawToolTool from '@editorjs/raw';
 import InlineCodeTool from '@editorjs/inline-code';
+import Tooltip from 'editorjs-tooltip';
 import AlertTool from 'editorjs-alert';
 import StrikethroughTool from '@itech-indrustries/editorjs-strikethrough';
 import AlignmentTuneTool from 'editorjs-text-alignment-blocktune';
@@ -20,6 +21,7 @@ import ListTool from 'editorjs-list';
 import ImageTool from './custom-plugins/plugin-image-patch.js';
 import AttachesTool from './custom-plugins/plugin-attaches-patch.js';
 import PersonalityTool from './custom-plugins/plugin-personality-patch.js';
+import MarqedTool from './custom-plugins/marqed-tool.js';
 
 export type UploaderConfig = {
 	addTokenToURL: (url: string, token: string) => string;
@@ -35,8 +37,9 @@ export default function getTools(
 	selection: Array<string>,
 	haveFilesAccess: boolean
 ): Record<string, object> {
-	const tools: Record<string, any> = {};
-	const fileRequiresTools = ['attaches', 'personality', 'image'];
+	const tools: Record<string, any> = {
+	};
+	const fileRequiresTools = ['attaches', 'personality', 'image', 'marqed'];
 
 	const defaults: Record<string, any> = {
 		header: {
@@ -127,6 +130,20 @@ export default function getTools(
 			config: {
 				uploader: uploaderConfig,
 			},
+		marqed: {
+			class: MarqedTool,
+		},
+		tooltip: {
+			class: Tooltip,
+			config: {
+			  location: 'left',
+			  highlightColor: '#FFEFD5',
+			  underline: true,
+			  backgroundColor: '#154360',
+			  textColor: '#FDFEFE',
+			  holder: 'editorId',
+			}
+		  },	
 		},
 		alignmentTune: {
 			class: AlignmentTuneTool,
