@@ -14,14 +14,10 @@ export default class MarqedTool {
 		this.button.classList.toggle(this.api.styles.inlineToolButtonActive, state);
 	}
 
-	constructor({ data, api }) {
+	constructor({ api }) {
 		this.api = api;
 		this.button = null;
 		this._state = false;
-    this.data = {
-      url: window.location.pathname // Get the current URL
-    };
-
 
 		this.tag = 'MARK';
 		this.class = 'cdx-marker';
@@ -50,7 +46,6 @@ export default class MarqedTool {
 		const mark = document.createElement(this.tag);
 
 		mark.classList.add(this.class);
-    mark.setAttribute('data-linkedcomment','');
 		mark.appendChild(selectedText);
 		range.insertNode(mark);
 
@@ -58,7 +53,7 @@ export default class MarqedTool {
 	}
 
 	unwrap(range) {
-		const mark = this.api.selection.findParentTag(this.tag, this.class);
+		let mark = this.api.selection.findParentTag(this.tag, this.class);
 		const text = range.extractContents();
 
 		mark.remove();
@@ -72,37 +67,25 @@ export default class MarqedTool {
 		this.state = !!mark;
 
 		if (this.state) {
-			this.showActions(mark);
+			this.showActions();
 		} else {
 			this.hideActions();
 		}
 	}
 
 	renderActions() {
-
-    const parts = this.data.url.split("/");
-    const id = parts.pop(); 
-    console.log(id)
-
 		this.dropdown = document.createElement('select');
-
 		const directus = new Directus('http://localhost:8055');
 		directus
-			.items('sources')
-			.readOne(id,{
-				fields: ['comments.id', 'comments.title'],
+			.items('comments')
+			.readByQuery({
+				fields: ['id', 'title'],
 			})
 			.then((response) => {
-        console.log(response.comments)
-
-        var option = document.createElement('option');
-        option.value = 'id';
-        option.text = '---';
-        this.dropdown.appendChild(option);
-				for (var i = 0; i < response.comments.length; i++) {
+				for (var i = 0; i < response.data.length; i++) {
 					var option = document.createElement('option');
-					option.value = response.comments[i].id;
-					option.text = response.comments[i].title;
+					option.value = response.data[i].id;
+					option.text = response.data[i].title;
 					this.dropdown.appendChild(option);
 				}
 			})
@@ -113,22 +96,17 @@ export default class MarqedTool {
 		return this.dropdown;
 	}
 
-	showActions(mark) {
+	showActions() {
 		this.dropdown.onchange = () => {
 			if (this.dropdown.selectedIndex) {
-				// var selectedComment = this.dropdown.selectedIndex;
-        const selectedIndex = this.dropdown.selectedIndex;
-        const selectedOption = this.dropdown.options[selectedIndex];
-        const selectedValue = selectedOption.value;
-        mark.dataset.linkedcomment = selectedValue;
+				var selectedComment = this.dropdown.selectedIndex;
 			}
-      // if (selectedValue) {
-      //   console.log(selectedValue)
-      //   mark.dataset.linkedcomment = selectedValue;
-      // }
 		};
 		this.dropdown.hidden = false;
-		
+		if (selectedComment) {
+			mark.setAttribute('linked_comment_id','1');
+
+		}
 	}
 
 	hideActions() {
@@ -140,7 +118,7 @@ export default class MarqedTool {
 		return {
 			mark: {
                 class: 'cdx-marker',
-                'data-linkedcomment': true
+				linked_comment_id: true
             }
 		};
 		}

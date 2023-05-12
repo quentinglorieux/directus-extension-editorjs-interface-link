@@ -21,6 +21,7 @@ import ImageTool from './custom-plugins/plugin-image-patch.js';
 import AttachesTool from './custom-plugins/plugin-attaches-patch.js';
 import PersonalityTool from './custom-plugins/plugin-personality-patch.js';
 import MarqedTool from './custom-plugins/marqed-tool.js';
+// import CommentTool from './custom-plugins/comment-tool.js';
 
 export type UploaderConfig = {
 	addTokenToURL: (url: string, token: string) => string;
@@ -51,6 +52,10 @@ export default function getTools(
 		marqed: {
 			class: MarqedTool,
 		},
+		// comment: {
+		// 	class: CommentTool,
+		// 	config: { x:'Commentaires'}
+		// },
 		list: {
 			class: ListTool,
 			inlineToolbar: false,
@@ -149,7 +154,7 @@ export default function getTools(
 		}
 	}
 
-	console.log(tools)
+	// console.log(tools)
 
 	
 

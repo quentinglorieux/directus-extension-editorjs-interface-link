@@ -23,7 +23,7 @@
   ],
   "directus:extension": {
     "type": "interface",
-    "path": "dist/index.js",
+    "path": "../../localdirectus/extensions/interfaces/directus-extension-editorjs/index.js",
     "source": "src/index.ts",
     "host": "^v9.9.0",
     "hidden": false
@@ -75,5 +75,8 @@
     "parserOptions": {
       "sourceType": "module"
     }
+  },
+  "dependencies": {
+    "@directus/sdk": "^10.3.3"
   }
 }
