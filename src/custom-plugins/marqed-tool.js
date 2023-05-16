@@ -24,8 +24,9 @@ export default class MarqedTool {
 		};
 
 		this.tag = 'MARK';
-		this.class = 'comment-marker';
-		this.class = 'comment-paragraph';
+		this.class = '';
+		// 'comment-marker';
+		// this.class = 'comment-paragraph';
 	}
 
 	render() {
@@ -47,39 +48,42 @@ export default class MarqedTool {
 	}
 
 	wrap(range) {
-		const selectedText = range.extractContents();
-		const words = selectedText.textContent.trim().split(/\s+/);
-		const containsMultipleWords = words.length > 1;
-    console.log(containsMultipleWords)
+		let mark = document.createElement(this.tag);
 
-		const mark = document.createElement(this.tag);
-    this.class = words.length > 1 ? 'comment-paragraph' : 'comment-marker'
+		const selectedText = range.extractContents();
+		this.class = this.isMultipleWords(selectedText) ? 'comment-paragraph' : 'comment-marker';
 
 		mark.classList.add(this.class);
 		mark.setAttribute('data-linkedcomment', '');
 		mark.appendChild(selectedText);
 		range.insertNode(mark);
-
+		
 		this.api.selection.expandToTag(mark);
 	}
 
-	unwrap(range) {
-		const mark = this.api.selection.findParentTag(this.tag, this.class);
-		const text = range.extractContents();
+	unwrap(x) {
+		let termWrapper = this.api.selection.findParentTag(this.tag);
+		this.api.tooltip.hide(termWrapper);
+		this.api.selection.expandToTag(termWrapper);
 
-		mark.remove();
+		let sel = window.getSelection();
+		let range2 = sel.getRangeAt(0);
 
-		range.insertNode(text);
+		let unwrappedContent = range2.extractContents();
+		termWrapper.parentNode.removeChild(termWrapper);
+
+		range2.insertNode(unwrappedContent);
+
+		sel.removeAllRanges();
+		sel.addRange(range2);
 	}
 
 	checkState() {
-		const mark = this.api.selection.findParentTag(this.tag);
-
-    // Double negation to convert to boolean
-		this.state = !!mark;
+		let mark = this.api.selection.findParentTag(this.tag);
+		this.state = !!mark; // Double negation to convert to boolean
 
 		if (this.state) {
-			this.showActions(mark);
+			this.showActions(mark)
 		} else {
 			this.hideActions();
 		}
@@ -88,7 +92,6 @@ export default class MarqedTool {
 	renderActions() {
 		const parts = this.data.url.split('/');
 		const id = parts.pop();
-		console.log(id);
 
 		this.dropdown = document.createElement('select');
 
@@ -99,8 +102,6 @@ export default class MarqedTool {
 				fields: ['comments.id', 'comments.title'],
 			})
 			.then((response) => {
-				console.log(response.comments);
-
 				var option = document.createElement('option');
 				option.value = 'id';
 				option.text = '---';
@@ -115,7 +116,6 @@ export default class MarqedTool {
 			.catch((error) => console.error(error));
 
 		this.dropdown.hidden = true;
-
 		return this.dropdown;
 	}
 
@@ -124,8 +124,11 @@ export default class MarqedTool {
 			if (this.dropdown.selectedIndex) {
 				const selectedIndex = this.dropdown.selectedIndex;
 				const selectedOption = this.dropdown.options[selectedIndex];
-				const selectedValue = selectedOption.value;
-				mark.dataset.linkedcomment = selectedValue;
+				mark.dataset.linkedcomment = selectedOption.value;
+				if (selectedOption.text) {
+					const content = selectedOption.text.slice(0, 20) + ' ...';
+					this.api.tooltip.onHover(mark, content);
+					}
 			}
 		};
 		this.dropdown.hidden = false;
@@ -134,6 +137,11 @@ export default class MarqedTool {
 	hideActions() {
 		this.dropdown.onchange = null;
 		this.dropdown.hidden = true;
+	}
+
+	isMultipleWords(selectedText) {
+		const words = selectedText.textContent.trim().split(/\s+/);
+		return words.length > 1;
 	}
 
 	static get sanitize() {

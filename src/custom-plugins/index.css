@@ -1,9 +1,9 @@
 .comment-marker {
-    background: rgba(235, 73, 73, 0.29);
+    background: rgba(232, 83, 83, 0.35);
     padding: 5px 0;
   }
 
 .comment-paragraph {
-    background: rgba(213, 226, 130, 0.29);
+    background: rgba(213, 226, 130, 0.25);
     padding: 2px 0;
   }
