@@ -20,8 +20,8 @@ import ListTool from 'editorjs-list';
 import ImageTool from './custom-plugins/plugin-image-patch.js';
 import AttachesTool from './custom-plugins/plugin-attaches-patch.js';
 import PersonalityTool from './custom-plugins/plugin-personality-patch.js';
-import MarqedTool from './custom-plugins/marqed-tool.js';
-// import CommentTool from './custom-plugins/comment-tool.js';
+// import MarqedTool from './custom-plugins/marqed-tool.js';
+import CommentTool from './custom-plugins/plugin-comment-tool.js';
 
 export type UploaderConfig = {
 	addTokenToURL: (url: string, token: string) => string;
@@ -41,7 +41,7 @@ export default function getTools(
 ): Record<string, object> {
 	const tools: Record<string, any> = {
 	};
-	const fileRequiresTools = ['attaches', 'personality', 'image', 'marqed'];
+	const fileRequiresTools = ['attaches', 'personality', 'image', 'comment'];
 
 	const defaults: Record<string, any> = {
 		header: {
@@ -50,12 +50,8 @@ export default function getTools(
 			inlineToolbar: true,
 		},
 		marqed: {
-			class: MarqedTool,
+			class: CommentTool,
 		},
-		// comment: {
-		// 	class: CommentTool,
-		// 	config: { x:'Commentaires'}
-		// },
 		list: {
 			class: ListTool,
 			inlineToolbar: false,

@@ -22,11 +22,8 @@ export default class MarqedTool {
 		this.data = {
 			url: window.location.pathname, // Get the current URL
 		};
-
 		this.tag = 'MARK';
 		this.class = '';
-		// 'comment-marker';
-		// this.class = 'comment-paragraph';
 	}
 
 	render() {
@@ -55,27 +52,28 @@ export default class MarqedTool {
 
 		mark.classList.add(this.class);
 		mark.setAttribute('data-linkedcomment', '');
+		mark.setAttribute('data-iscomment', false);
 		mark.appendChild(selectedText);
 		range.insertNode(mark);
-		
 		this.api.selection.expandToTag(mark);
+		
 	}
 
-	unwrap(x) {
+	unwrap() {
 		let termWrapper = this.api.selection.findParentTag(this.tag);
 		this.api.tooltip.hide(termWrapper);
 		this.api.selection.expandToTag(termWrapper);
 
 		let sel = window.getSelection();
-		let range2 = sel.getRangeAt(0);
+		let range = sel.getRangeAt(0);
 
-		let unwrappedContent = range2.extractContents();
+		let unwrappedContent = range.extractContents();
 		termWrapper.parentNode.removeChild(termWrapper);
 
-		range2.insertNode(unwrappedContent);
+		range.insertNode(unwrappedContent);
 
 		sel.removeAllRanges();
-		sel.addRange(range2);
+		sel.addRange(range);
 	}
 
 	checkState() {
@@ -83,7 +81,7 @@ export default class MarqedTool {
 		this.state = !!mark; // Double negation to convert to boolean
 
 		if (this.state) {
-			this.showActions(mark)
+			this.showActions(mark);
 		} else {
 			this.hideActions();
 		}
@@ -94,6 +92,8 @@ export default class MarqedTool {
 		const id = parts.pop();
 
 		this.dropdown = document.createElement('select');
+
+		let mark = this.api.selection.findParentTag(this.tag);
 
 		const directus = new Directus('http://localhost:8055');
 		directus
@@ -111,6 +111,12 @@ export default class MarqedTool {
 					option.value = response.comments[i].id;
 					option.text = response.comments[i].title;
 					this.dropdown.appendChild(option);
+					// populate with the current selection
+					if (!!mark) {
+						if (option.value == mark.dataset.linkedcomment) {
+							this.dropdown.selectedIndex = i+1;
+						}
+					}
 				}
 			})
 			.catch((error) => console.error(error));
@@ -125,10 +131,11 @@ export default class MarqedTool {
 				const selectedIndex = this.dropdown.selectedIndex;
 				const selectedOption = this.dropdown.options[selectedIndex];
 				mark.dataset.linkedcomment = selectedOption.value;
-				if (selectedOption.text) {
-					const content = selectedOption.text.slice(0, 20) + ' ...';
+				mark.dataset.iscomment = true;
+				if (selectedOption.text.length ) {
+					const content = selectedOption.text.length > 20 ? selectedOption.text.slice(0, 20) + ' ...' : selectedOption.text;
 					this.api.tooltip.onHover(mark, content);
-					}
+				}
 			}
 		};
 		this.dropdown.hidden = false;
@@ -149,6 +156,7 @@ export default class MarqedTool {
 			mark: {
 				class: true,
 				'data-linkedcomment': true,
+				'data-iscomment': true,
 			},
 		};
 	}
