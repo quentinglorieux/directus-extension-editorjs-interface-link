@@ -1,6 +1,6 @@
 {
   "name": "directus-extension-editorjs",
-  "version": "2.0.2",
+  "version": "2.1.1",
   "author": {
     "name": "Adrian Dimitrov & Quentin Glorieux"
   },
@@ -22,9 +22,9 @@
   ],
   "directus:extension": {
     "type": "interface",
-    "path": "../../localdirectus/extensions/interfaces/directus-extension-editorjs/index.js",
+    "path": "dist/index.js",
     "source": "src/index.ts",
-    "host": "^v9.9.0",
+    "host": "^v10.2.0",
     "hidden": false
   },
   "scripts": {

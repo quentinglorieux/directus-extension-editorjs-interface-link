@@ -95,21 +95,21 @@ export default class MarqedTool {
 
 		let mark = this.api.selection.findParentTag(this.tag);
 
-		const directus = new Directus('http://localhost:8055');
+		const directus = new Directus('https://jurisdirectus.rubidiumweb.eu');
 		directus
 			.items('sources')
 			.readOne(id, {
-				fields: ['comments.id', 'comments.title'],
+				fields: ['commentaires.id', 'commentaires.titre'],
 			})
 			.then((response) => {
 				var option = document.createElement('option');
 				option.value = 'id';
 				option.text = '---';
 				this.dropdown.appendChild(option);
-				for (var i = 0; i < response.comments.length; i++) {
+				for (var i = 0; i < response.commentaires.length; i++) {
 					var option = document.createElement('option');
-					option.value = response.comments[i].id;
-					option.text = response.comments[i].title;
+					option.value = response.commentaires[i].id;
+					option.text = response.commentaires[i].titre;
 					this.dropdown.appendChild(option);
 					// populate with the current selection
 					if (!!mark) {
