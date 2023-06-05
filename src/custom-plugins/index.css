@@ -1,11 +1,11 @@
 .comment-marker {
-    background: rgba(230, 232, 83, 0.512);
+    background: rgba(230, 232, 83, 0.5);
     padding: 5px 0;
     font-family: serif;
   }
 
 .comment-paragraph {
-    background: rgba(16, 244, 0, 0.191);
+    background: rgba(16, 244, 0, 0.2);
     padding: 2px 0;
     font-family: sans-serif;
   }
