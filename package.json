@@ -22,9 +22,9 @@
   ],
   "directus:extension": {
     "type": "interface",
-    "path": "dist/index.js",
+    "path": "../interfaces/directus-extension-editorjs/index.js",
     "source": "src/index.ts",
-    "host": "^v10.2.0",
+    "host": "^v9.9.0",
     "hidden": false
   },
   "scripts": {
