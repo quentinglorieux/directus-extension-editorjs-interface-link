@@ -29,9 +29,9 @@ export default class MarqedTool {
 	render() {
 		this.button = document.createElement('button');
 		this.button.type = 'button';
-		this.button.innerHTML = 'Commentaires';
+		this.button.innerHTML = 'Commentaire';
 		this.button.classList.add(this.api.styles.inlineToolButton);
-
+		console.log('hello')
 		return this.button;
 	}
 
